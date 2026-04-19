@@ -3,5 +3,5 @@
 *.out
 vendor/
 dist/
-vibe-harness
+/vibe-harness
 .DS_Store
