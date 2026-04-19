@@ -1,56 +1,59 @@
-# vibe_harness
+# vibe-harness
 
-A language-agnostic build tool that enforces a non-configurable quality floor for AI-generated code.
+vibe-harness is a static analysis tool that runs 6 non-AST quality checks on any source tree. It is language-agnostic — no AST parsing, no tree-sitter, no language-specific logic. Just text-level checks that work everywhere.
 
-## Why
+## Checks
 
-AI coding agents produce code that works but often lacks the qualities humans learn to include through experience — logging, error handling, input validation, reasonable function sizes. Traditional linters are configurable because humans argue about rules. This tool is intentionally **not configurable**. The rules are baked in. That's the point.
+| ID | Name | Severity | Description |
+|----|------|----------|-------------|
+| VH-G001 | File Length | warning | Files must not exceed 300 non-blank, non-comment lines |
+| VH-G005 | Hardcoded Secrets | error | Detects hardcoded secrets and credentials |
+| VH-G006 | Magic Values | warning | Detects magic numbers and inline strings |
+| VH-G007 | Copy-Paste Duplication | warning | Detects duplicated code blocks (6+ lines, 80%+ similarity) |
+| VH-G008 | Comment-to-Code Ratio | note | Flags files where comments exceed 1:3 ratio |
+| VH-G011 | Disabled Security Features | error | Detects disabled security verification |
 
-## Rules (non-configurable)
+## Usage
 
-| Rule | Description |
-|------|-------------|
-| file-length | Files must not exceed a fixed line count |
-| function-length | Functions/methods must not exceed a fixed line count |
-| missing-logging | Functions performing I/O or state changes must include logging calls |
-| missing-error-handling | I/O operations must have error handling |
-| magic-values | Hardcoded numeric/string literals (beyond small integers) must be named constants |
-| missing-input-validation | Public-facing functions must validate their parameters |
-| dead-code | Unreachable code branches are flagged |
-| comment-ratio | Excessive comments on obvious code are flagged |
-| duplication | Copy-pasted blocks across files are flagged |
+```bash
+# Build
+go build -o vibe-harness ./cmd/vibe-harness
 
-## Configuration (recognition hints only)
+# Scan a directory
+./vibe-harness /path/to/source
 
-The tool accepts a `.vibe_harness.toml` file that tells it **how to recognize** patterns in your codebase — never **where** to put them or **whether** to enforce them.
+# JSON output
+./vibe-harness --format json /path/to/source
 
-```toml
-[observability]
-# These are the names your logging library uses
-logging_calls = ["log", "logger", "logging", "tracing"]
-metrics_calls = ["metrics", "counter", "histogram", "gauge", "timer"]
+# SARIF output for CI
+./vibe-harness --format sarif /path/to/source > results.sarif
 
-[languages]
-# Map file extensions to language names (for tree-sitter)
-".py" = "python"
-".ts" = "typescript"
-".go" = "go"
-".java" = "java"
-".rb" = "ruby"
+# Use config
+./vibe-harness --config .vibe_harness.toml /path/to/source
 ```
 
-That's it. You can't turn rules off. You can't change thresholds. You can't skip files. The floor is the floor.
+## Configuration
 
-## Architecture
+The tool accepts a `.vibe_harness.toml` file for recognition hints — pattern definitions that tell it how to detect issues in your codebase.
 
-- **Tree-sitter** for language-agnostic AST parsing
-- Single static binary (no runtime dependencies)
-- Exit code 0 = pass, 1 = fail
-- Violations printed to stderr
+## Build & Test
 
-## Status
+```bash
+go build -o vibe-harness ./cmd/vibe-harness
+go test ./...
+go vet ./...
+```
 
-Early stage. Building the spec first, then implementation.
+## Install
+
+```bash
+curl -sL https://github.com/jgervais/vibe_harness/releases/latest/download/install.sh | bash
+```
+
+## Exit Codes
+
+- `0` — all checks passed
+- `1` — one or more violations found
 
 ## License
 

@@ -1,0 +1,7 @@
+*.exe
+*.test
+*.out
+vendor/
+dist/
+vibe-harness
+.DS_Store

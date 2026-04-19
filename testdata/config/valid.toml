@@ -1,0 +1,13 @@
+[observability]
+logging_calls = ["log", "logger", "logging", "tracing", "slog", "logr"]
+metrics_calls = ["metrics", "counter", "histogram", "gauge", "timer", "prometheus"]
+
+[languages]
+".py" = "python"
+".ts" = "typescript"
+".tsx" = "typescript"
+".js" = "javascript"
+".go" = "go"
+".java" = "java"
+".rb" = "ruby"
+".rs" = "rust"

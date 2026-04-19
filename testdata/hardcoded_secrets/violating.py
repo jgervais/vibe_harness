@@ -1,0 +1,5 @@
+AWS_KEY = "AKIAIOSFODNN7EXAMPLE"
+api_key = "sk-1234567890abcdef12345678"
+db_url = "postgres://admin:password123@db.host:5432/mydb"
+BEARER_TOKEN = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.abc.def"
+PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\nMIIEowIABAQCAVEA"
