@@ -12,10 +12,22 @@ case "$ARCH" in
   *) echo "unsupported arch: $ARCH"; exit 1 ;;
 esac
 
-case "$OS" in
-  darwin|linux) ;;
-  *) echo "unsupported os: $OS"; exit 1 ;;
-esac
+if [ "$OS" = "darwin" ]; then
+  # Darwin builds require CGo and cannot be cross-compiled in CI.
+  # Fall back to go install.
+  if ! command -v go >/dev/null 2>&1; then
+    echo "Go is required to install on macOS. See https://go.dev/dl/"
+    exit 1
+  fi
+  echo "Installing with go install (no pre-built binary for $OS/$ARCH)..."
+  go install "github.com/$REPO/cmd/$BIN@latest"
+  echo "Installed $BIN to $(go env GOPATH)/bin/$BIN"
+  exit 0
+fi
+
+if [ "$OS" != "linux" ]; then
+  echo "unsupported os: $OS"; exit 1
+fi
 
 if ! command -v curl >/dev/null 2>&1; then
   echo "curl is required"; exit 1

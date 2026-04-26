@@ -6,28 +6,20 @@ before:
     - go mod tidy
 
 builds:
-  - binary: vibe-harness
-    main: ./cmd/vibe-harness
+  - main: ./cmd/vibe-harness
+    env:
+      - CGO_ENABLED=1
+    goos: [linux]
+    goarch: [amd64]
     ldflags:
       - -s -w
       - -X main.version={{ .Version }}
       - -X main.rulesHash={{ .Env.RULES_HASH }}
-    goos:
-      - linux
-      - darwin
-      - windows
-    goarch:
-      - amd64
-      - arm64
-    ignore:
-      - goos: windows
-        goarch: arm64
 
 archives:
-  - format: tar.gz
-    format_overrides:
-      - goos: windows
-        format: zip
+  - formats: [tar.gz]
+    name_template: >-
+      {{ .ProjectName }}_{{ .Os }}_{{ .Arch }}
     files:
       - README.md
       - LICENSE
