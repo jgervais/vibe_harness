@@ -9,7 +9,7 @@ import (
 	"github.com/jgervais/vibe_harness/internal/config"
 )
 
-func fixturePath(name string) string {
+func hardcodedSecretsFixturePath(name string) string {
 	_, thisFile, _, _ := runtime.Caller(0)
 	root := filepath.Join(filepath.Dir(thisFile), "..", "..", "..")
 	return filepath.Join(root, "testdata", "hardcoded_secrets", name)
@@ -28,7 +28,7 @@ func TestHardcodedSecretsCheck_IDAndName(t *testing.T) {
 func TestHardcodedSecretsCheck_CleanFile(t *testing.T) {
 	c := NewHardcodedSecretsCheck()
 	cfg := config.DefaultConfig()
-	content, err := os.ReadFile(fixturePath("clean.py"))
+	content, err := os.ReadFile(hardcodedSecretsFixturePath("clean.py"))
 	if err != nil {
 		t.Fatalf("reading clean fixture: %v", err)
 	}
@@ -44,7 +44,7 @@ func TestHardcodedSecretsCheck_CleanFile(t *testing.T) {
 func TestHardcodedSecretsCheck_ViolatingFile(t *testing.T) {
 	c := NewHardcodedSecretsCheck()
 	cfg := config.DefaultConfig()
-	content, err := os.ReadFile(fixturePath("violating.py"))
+	content, err := os.ReadFile(hardcodedSecretsFixturePath("violating.py"))
 	if err != nil {
 		t.Fatalf("reading violating fixture: %v", err)
 	}

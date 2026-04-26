@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
+	"github.com/bmatcuk/doublestar/v4"
 	"github.com/BurntSushi/toml"
 )
 
@@ -14,8 +16,10 @@ type ObservabilityConfig struct {
 }
 
 type Config struct {
-	Observability ObservabilityConfig `toml:"observability"`
-	Languages     map[string]string   `toml:"languages"`
+	Observability   ObservabilityConfig `toml:"observability"`
+	Languages       map[string]string   `toml:"languages"`
+	SourceDirs      []string            `toml:"source_directories"`
+	TestFilePattern []string            `toml:"test_file_pattern"`
 }
 
 var defaultLoggingCalls = []string{"log", "logger", "logging", "tracing", "slog", "logr"}
@@ -48,7 +52,9 @@ func DefaultConfig() Config {
 			LoggingCalls: loggingCalls,
 			MetricsCalls: metricsCalls,
 		},
-		Languages: languages,
+		Languages:       languages,
+		SourceDirs:      []string{"**"},
+		TestFilePattern: []string{"_test.", "testdata"},
 	}
 }
 
@@ -63,16 +69,10 @@ func LoadConfig(path string) (*Config, error) {
 	}
 
 	cfg := DefaultConfig()
-
-	if len(fileCfg.Observability.LoggingCalls) > 0 {
-		cfg.Observability.LoggingCalls = fileCfg.Observability.LoggingCalls
-	}
-	if len(fileCfg.Observability.MetricsCalls) > 0 {
-		cfg.Observability.MetricsCalls = fileCfg.Observability.MetricsCalls
-	}
-	for k, v := range fileCfg.Languages {
-		cfg.Languages[k] = v
-	}
+	cfg.Observability = fileCfg.Observability
+	cfg.Languages = fileCfg.Languages
+	cfg.SourceDirs = fileCfg.SourceDirs
+	cfg.TestFilePattern = fileCfg.TestFilePattern
 
 	return &cfg, nil
 }
@@ -97,4 +97,45 @@ func AutoDiscoverConfig(target string) (string, error) {
 	}
 
 	return "", nil
+}
+
+func (c *Config) IsTestFile(path string) bool {
+	for _, pattern := range c.TestFilePattern {
+		if strings.Contains(path, pattern) {
+			return true
+		}
+	}
+	return false
+}
+
+func (c *Config) IsInSourceDir(relPath string) bool {
+	for _, pattern := range c.SourceDirs {
+		match, err := doublestar.Match(pattern, relPath)
+		if err == nil && match {
+			return true
+		}
+	}
+	return false
+}
+
+func (c *Config) IsSourceDirAncestor(relDir string) bool {
+	if relDir == "" || relDir == "." {
+		return true
+	}
+	for _, pattern := range c.SourceDirs {
+		cleaned := strings.TrimPrefix(pattern, "./")
+		if cleaned == "**" {
+			return true
+		}
+		base := strings.TrimSuffix(cleaned, "/**")
+		base = strings.TrimSuffix(base, "/*")
+		base = strings.TrimSuffix(base, "/")
+		if relDir == base || strings.HasPrefix(relDir, base+"/") {
+			return true
+		}
+		if strings.HasPrefix(cleaned, relDir+"/") {
+			return true
+		}
+	}
+	return false
 }

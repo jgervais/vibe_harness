@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2026-04-19
 
 ## Active Technologies
+- Go 1.22+ + go-tree-sitter v0.25+, tree-sitter grammar bindings (Python, TypeScript/TSX, Go, Java, Ruby, Rust), BurntSushi/toml (existing) (002-ast-powered-checks)
+- N/A (stateless CLI tool; config from `.vibe_harness.toml`) (002-ast-powered-checks)
 
 - Go 1.22+ (001-non-ast-mvp)
 - BurntSushi/toml for config parsing (001-non-ast-mvp)
@@ -32,6 +34,7 @@ testdata/                  # Fixture directories for tests
 Go: Follow standard Go conventions (gofmt, go vet, effective Go)
 
 ## Recent Changes
+- 002-ast-powered-checks: Added Go 1.22+ + go-tree-sitter v0.25+, tree-sitter grammar bindings (Python, TypeScript/TSX, Go, Java, Ruby, Rust), BurntSushi/toml (existing)
 
 - 001-non-ast-mvp: Added
 

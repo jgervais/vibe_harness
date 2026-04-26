@@ -1,3 +1,6 @@
+source_directories = ["**"]
+test_file_pattern = ["_test.", "testdata"]
+
 [observability]
 logging_calls = ["log", "logger", "logging", "tracing", "slog", "logr"]
 metrics_calls = ["metrics", "counter", "histogram", "gauge", "timer", "prometheus"]

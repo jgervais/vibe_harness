@@ -126,7 +126,8 @@ func TestInvalidFormat(t *testing.T) {
 
 func TestScanTestdata(t *testing.T) {
 	testdataPath := filepath.Join("..", "..", "testdata", "hardcoded_secrets")
-	_, stderr, exitCode := run(testdataPath)
+	configPath := filepath.Join("..", "..", "testdata", "config", "valid.toml")
+	_, stderr, exitCode := run("--config", configPath, testdataPath)
 	if exitCode != 1 {
 		t.Fatalf("expected exit code 1, got %d", exitCode)
 	}
@@ -137,7 +138,8 @@ func TestScanTestdata(t *testing.T) {
 
 func TestScanEmptyDirectory(t *testing.T) {
 	tmpDir := t.TempDir()
-	_, _, exitCode := run(tmpDir)
+	configPath := filepath.Join("..", "..", "testdata", "config", "valid.toml")
+	_, _, exitCode := run("--config", configPath, tmpDir)
 	if exitCode != 0 {
 		t.Fatalf("expected exit code 0, got %d", exitCode)
 	}
@@ -152,7 +154,8 @@ func TestScanNonExistentPath(t *testing.T) {
 
 func TestScanJSONFormat(t *testing.T) {
 	testdataPath := filepath.Join("..", "..", "testdata", "hardcoded_secrets")
-	stdout, _, exitCode := run("--format", "json", testdataPath)
+	configPath := filepath.Join("..", "..", "testdata", "config", "valid.toml")
+	stdout, _, exitCode := run("--config", configPath, "--format", "json", testdataPath)
 	if exitCode != 1 {
 		t.Fatalf("expected exit code 1, got %d", exitCode)
 	}
@@ -169,7 +172,8 @@ func TestScanJSONFormat(t *testing.T) {
 
 func TestScanSARIFFormat(t *testing.T) {
 	testdataPath := filepath.Join("..", "..", "testdata", "hardcoded_secrets")
-	stdout, _, exitCode := run("--format", "sarif", testdataPath)
+	configPath := filepath.Join("..", "..", "testdata", "config", "valid.toml")
+	stdout, _, exitCode := run("--config", configPath, "--format", "sarif", testdataPath)
 	if exitCode != 1 {
 		t.Fatalf("expected exit code 1, got %d", exitCode)
 	}
@@ -217,10 +221,13 @@ func TestConfigInvalid(t *testing.T) {
 	}
 }
 
-func TestConfigDefault(t *testing.T) {
+func TestConfigMissing(t *testing.T) {
 	tmpDir := t.TempDir()
-	_, _, exitCode := run(tmpDir)
-	if exitCode == 2 {
-		t.Fatalf("expected exit code 0 or 1 with default config (not 2), got %d", exitCode)
+	_, stderr, exitCode := run(tmpDir)
+	if exitCode != 2 {
+		t.Fatalf("expected exit code 2 when no config file found, got %d", exitCode)
+	}
+	if !strings.Contains(stderr, ".vibe_harness.toml") {
+		t.Fatalf("expected stderr to mention .vibe_harness.toml, got: %s", stderr)
 	}
 }

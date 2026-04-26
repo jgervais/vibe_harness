@@ -5,3 +5,7 @@ vendor/
 dist/
 /vibe-harness
 .DS_Store
+*.prof*
+.env*
+.idea/
+.vscode/

@@ -53,35 +53,25 @@ func main() {
 	}
 
 	var cfg *config.Config
+	discovered, _ := config.AutoDiscoverConfig(target)
 	if *configFlag != "" {
-		if err := config.ValidateTOML(*configFlag); err != nil {
-			fmt.Fprintf(os.Stderr, "error: %v\n", err)
-			os.Exit(2)
-		}
-		loaded, err := config.LoadConfig(*configFlag)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "error: %v\n", err)
-			os.Exit(2)
-		}
-		cfg = loaded
-	} else {
-		discovered, _ := config.AutoDiscoverConfig(target)
-		if discovered != "" {
-			if err := config.ValidateTOML(discovered); err != nil {
-				fmt.Fprintf(os.Stderr, "error: %v\n", err)
-				os.Exit(2)
-			}
-			loaded, err := config.LoadConfig(discovered)
-			if err != nil {
-				fmt.Fprintf(os.Stderr, "error: %v\n", err)
-				os.Exit(2)
-			}
-			cfg = loaded
-		} else {
-			d := config.DefaultConfig()
-			cfg = &d
-		}
+		discovered = *configFlag
 	}
+	if discovered == "" {
+		fmt.Fprintf(os.Stderr, "error: no .vibe_harness.toml found (required: must define [languages] and source_directories)\n")
+		os.Exit(2)
+	}
+
+	if err := config.ValidateTOML(discovered); err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(2)
+	}
+	loaded, err := config.LoadConfig(discovered)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(2)
+	}
+	cfg = loaded
 
 	result, err := scanner.Scan(target, cfg, version, rulesHash)
 	if err != nil {

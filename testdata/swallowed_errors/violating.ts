@@ -1,0 +1,4 @@
+try {
+    doSomething();
+} catch (e) {
+}

@@ -157,12 +157,13 @@ func TestCheckConstruction(t *testing.T) {
 
 func TestChecks(t *testing.T) {
 	checks := Checks()
-	if len(checks) != 6 {
-		t.Fatalf("Checks() returned %d entries, want 6", len(checks))
+	if len(checks) != 12 {
+		t.Fatalf("Checks() returned %d entries, want 12", len(checks))
 	}
 
-	wantIDs := []string{"VH-G001", "VH-G005", "VH-G006", "VH-G007", "VH-G008", "VH-G011"}
-	wantSeverities := []string{"warning", "error", "warning", "warning", "note", "error"}
+	wantIDs := []string{"VH-G001", "VH-G002", "VH-G003", "VH-G004", "VH-G005", "VH-G006", "VH-G007", "VH-G008", "VH-G009", "VH-G010", "VH-G011", "VH-G012"}
+	wantSeverities := []string{"warning", "warning", "warning", "error", "error", "error", "warning", "note", "error", "warning", "error", "warning"}
+	wantRequiresAST := []bool{false, true, true, true, false, false, false, false, true, true, false, true}
 
 	for i, c := range checks {
 		if c.ID != wantIDs[i] {
@@ -171,8 +172,8 @@ func TestChecks(t *testing.T) {
 		if c.Severity != wantSeverities[i] {
 			t.Errorf("Checks()[%d].Severity = %q, want %q", i, c.Severity, wantSeverities[i])
 		}
-		if c.RequiresAST != false {
-			t.Errorf("Checks()[%d].RequiresAST = %v, want false", i, c.RequiresAST)
+		if c.RequiresAST != wantRequiresAST[i] {
+			t.Errorf("Checks()[%d].RequiresAST = %v, want %v", i, c.RequiresAST, wantRequiresAST[i])
 		}
 	}
 }

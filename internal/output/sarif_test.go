@@ -68,8 +68,8 @@ func TestFormatSARIF_WithViolations(t *testing.T) {
 	}
 
 	sarifRules := driver["rules"].([]interface{})
-	if len(sarifRules) != 6 {
-		t.Errorf("expected 6 rules, got %d", len(sarifRules))
+	if len(sarifRules) != len(rules.Checks()) {
+		t.Errorf("expected %d rules, got %d", len(rules.Checks()), len(sarifRules))
 	}
 
 	sarifResults := run["results"].([]interface{})

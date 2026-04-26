@@ -1,0 +1,126 @@
+
+=== MCP Server Started at 2026-04-20T14:39:55.198Z ===
+{"event":"MCP_NOVA_STARTED","timestamp":"2026-04-20T14:39:55.204Z","version":"1.0.3","args":["/opt/homebrew/Cellar/node/25.9.0_2/bin/node","/opt/homebrew/bin/mcp-nova"],"pid":85631}
+{"event":"LOADING_MODULES","timestamp":"2026-04-20T14:39:55.206Z","pid":85631}
+{"event":"MODULES_LOADED","timestamp":"2026-04-20T14:39:55.220Z","pid":85631}
+{"event":"CREATING_MEMORY_SYSTEM","timestamp":"2026-04-20T14:39:55.220Z","pid":85631}
+{"event":"MEMORY_SYSTEM_CREATED","timestamp":"2026-04-20T14:39:55.226Z","pid":85631}
+{"event":"CREATING_MCP_SERVER","timestamp":"2026-04-20T14:39:55.226Z","pid":85631}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-20T14:39:55.227Z","message":"RequestHandlerService initialized","pid":85631}
+{"event":"MCP_SERVER_CREATED","timestamp":"2026-04-20T14:39:55.228Z","pid":85631}
+{"event":"STARTING_MCP_SERVER","timestamp":"2026-04-20T14:39:55.228Z","pid":85631}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-20T14:39:55.229Z","pid":85631}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T14:39:55.230Z","requestId":0,"method":"initialize","params":"{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{},\"clientInfo\":{\"name\":\"opencode\",\"version\":\"1.4.10\"}}","pid":85631}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T14:39:55.230Z","requestId":0,"method":"initialize","duration":0,"hasResult":true,"pid":85631}
+{"event":"NOTIFICATION_RECEIVED","timestamp":"2026-04-20T14:39:55.232Z","method":"notifications/initialized","pid":85631}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T14:39:55.232Z","requestId":1,"method":"tools/list","pid":85631}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T14:39:55.232Z","requestId":1,"method":"tools/list","duration":0,"hasResult":true,"pid":85631}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T14:39:55.234Z","requestId":2,"method":"resources/list","pid":85631}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T14:39:55.234Z","requestId":2,"method":"resources/list","duration":0,"hasResult":true,"pid":85631}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T14:39:55.234Z","requestId":3,"method":"prompts/list","pid":85631}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T14:39:55.234Z","requestId":3,"method":"prompts/list","duration":0,"hasResult":true,"pid":85631}
+
+=== MCP Server Started at 2026-04-20T16:04:36.393Z ===
+{"event":"MCP_NOVA_STARTED","timestamp":"2026-04-20T16:04:36.395Z","version":"1.0.3","args":["/opt/homebrew/Cellar/node/25.9.0_2/bin/node","/opt/homebrew/bin/mcp-nova"],"pid":95713}
+{"event":"LOADING_MODULES","timestamp":"2026-04-20T16:04:36.397Z","pid":95713}
+{"event":"MODULES_LOADED","timestamp":"2026-04-20T16:04:36.415Z","pid":95713}
+{"event":"CREATING_MEMORY_SYSTEM","timestamp":"2026-04-20T16:04:36.415Z","pid":95713}
+{"event":"MEMORY_SYSTEM_CREATED","timestamp":"2026-04-20T16:04:36.421Z","pid":95713}
+{"event":"CREATING_MCP_SERVER","timestamp":"2026-04-20T16:04:36.421Z","pid":95713}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-20T16:04:36.422Z","message":"RequestHandlerService initialized","pid":95713}
+{"event":"MCP_SERVER_CREATED","timestamp":"2026-04-20T16:04:36.423Z","pid":95713}
+{"event":"STARTING_MCP_SERVER","timestamp":"2026-04-20T16:04:36.423Z","pid":95713}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-20T16:04:36.424Z","pid":95713}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:04:36.425Z","requestId":0,"method":"initialize","params":"{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{},\"clientInfo\":{\"name\":\"opencode\",\"version\":\"1.4.10\"}}","pid":95713}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:04:36.425Z","requestId":0,"method":"initialize","duration":0,"hasResult":true,"pid":95713}
+{"event":"NOTIFICATION_RECEIVED","timestamp":"2026-04-20T16:04:36.432Z","method":"notifications/initialized","pid":95713}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:04:36.432Z","requestId":1,"method":"tools/list","pid":95713}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:04:36.432Z","requestId":1,"method":"tools/list","duration":0,"hasResult":true,"pid":95713}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:04:36.434Z","requestId":2,"method":"resources/list","pid":95713}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:04:36.434Z","requestId":2,"method":"resources/list","duration":0,"hasResult":true,"pid":95713}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:04:36.435Z","requestId":3,"method":"prompts/list","pid":95713}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:04:36.435Z","requestId":3,"method":"prompts/list","duration":0,"hasResult":true,"pid":95713}
+
+=== MCP Server Started at 2026-04-20T16:08:17.360Z ===
+{"event":"MCP_NOVA_STARTED","timestamp":"2026-04-20T16:08:17.362Z","version":"1.0.3","args":["/opt/homebrew/Cellar/node/25.9.0_2/bin/node","/opt/homebrew/bin/mcp-nova"],"pid":96746}
+{"event":"LOADING_MODULES","timestamp":"2026-04-20T16:08:17.363Z","pid":96746}
+{"event":"MODULES_LOADED","timestamp":"2026-04-20T16:08:17.375Z","pid":96746}
+{"event":"CREATING_MEMORY_SYSTEM","timestamp":"2026-04-20T16:08:17.375Z","pid":96746}
+{"event":"MEMORY_SYSTEM_CREATED","timestamp":"2026-04-20T16:08:17.379Z","pid":96746}
+{"event":"CREATING_MCP_SERVER","timestamp":"2026-04-20T16:08:17.379Z","pid":96746}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-20T16:08:17.380Z","message":"RequestHandlerService initialized","pid":96746}
+{"event":"MCP_SERVER_CREATED","timestamp":"2026-04-20T16:08:17.381Z","pid":96746}
+{"event":"STARTING_MCP_SERVER","timestamp":"2026-04-20T16:08:17.381Z","pid":96746}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-20T16:08:17.382Z","pid":96746}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:08:17.383Z","requestId":0,"method":"initialize","params":"{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{},\"clientInfo\":{\"name\":\"opencode\",\"version\":\"1.4.10\"}}","pid":96746}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:08:17.383Z","requestId":0,"method":"initialize","duration":0,"hasResult":true,"pid":96746}
+{"event":"NOTIFICATION_RECEIVED","timestamp":"2026-04-20T16:08:17.386Z","method":"notifications/initialized","pid":96746}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:08:17.386Z","requestId":1,"method":"tools/list","pid":96746}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:08:17.386Z","requestId":1,"method":"tools/list","duration":0,"hasResult":true,"pid":96746}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:08:17.388Z","requestId":2,"method":"resources/list","pid":96746}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:08:17.388Z","requestId":2,"method":"resources/list","duration":0,"hasResult":true,"pid":96746}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-20T16:08:17.388Z","requestId":3,"method":"prompts/list","pid":96746}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-20T16:08:17.388Z","requestId":3,"method":"prompts/list","duration":0,"hasResult":true,"pid":96746}
+
+=== MCP Server Started at 2026-04-26T14:06:40.830Z ===
+{"event":"MCP_NOVA_STARTED","timestamp":"2026-04-26T14:06:40.833Z","version":"1.0.3","args":["/opt/homebrew/Cellar/node/25.9.0_2/bin/node","/opt/homebrew/bin/mcp-nova"],"pid":52180}
+{"event":"LOADING_MODULES","timestamp":"2026-04-26T14:06:40.835Z","pid":52180}
+{"event":"MODULES_LOADED","timestamp":"2026-04-26T14:06:40.850Z","pid":52180}
+{"event":"CREATING_MEMORY_SYSTEM","timestamp":"2026-04-26T14:06:40.850Z","pid":52180}
+{"event":"MEMORY_SYSTEM_CREATED","timestamp":"2026-04-26T14:06:40.858Z","pid":52180}
+{"event":"CREATING_MCP_SERVER","timestamp":"2026-04-26T14:06:40.858Z","pid":52180}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-26T14:06:40.859Z","message":"RequestHandlerService initialized","pid":52180}
+{"event":"MCP_SERVER_CREATED","timestamp":"2026-04-26T14:06:40.860Z","pid":52180}
+{"event":"STARTING_MCP_SERVER","timestamp":"2026-04-26T14:06:40.860Z","pid":52180}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-26T14:06:40.861Z","pid":52180}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:06:40.862Z","requestId":0,"method":"initialize","params":"{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{},\"clientInfo\":{\"name\":\"opencode\",\"version\":\"1.4.10\"}}","pid":52180}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:06:40.863Z","requestId":0,"method":"initialize","duration":1,"hasResult":true,"pid":52180}
+{"event":"NOTIFICATION_RECEIVED","timestamp":"2026-04-26T14:06:40.866Z","method":"notifications/initialized","pid":52180}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:06:40.866Z","requestId":1,"method":"tools/list","pid":52180}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:06:40.866Z","requestId":1,"method":"tools/list","duration":0,"hasResult":true,"pid":52180}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:06:40.870Z","requestId":2,"method":"resources/list","pid":52180}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:06:40.871Z","requestId":2,"method":"resources/list","duration":1,"hasResult":true,"pid":52180}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:06:40.871Z","requestId":3,"method":"prompts/list","pid":52180}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:06:40.872Z","requestId":3,"method":"prompts/list","duration":1,"hasResult":true,"pid":52180}
+
+=== MCP Server Started at 2026-04-26T14:08:05.062Z ===
+{"event":"MCP_NOVA_STARTED","timestamp":"2026-04-26T14:08:05.063Z","version":"1.0.3","args":["/opt/homebrew/Cellar/node/25.9.0_2/bin/node","/opt/homebrew/bin/mcp-nova"],"pid":53021}
+{"event":"LOADING_MODULES","timestamp":"2026-04-26T14:08:05.065Z","pid":53021}
+{"event":"MODULES_LOADED","timestamp":"2026-04-26T14:08:05.076Z","pid":53021}
+{"event":"CREATING_MEMORY_SYSTEM","timestamp":"2026-04-26T14:08:05.076Z","pid":53021}
+{"event":"MEMORY_SYSTEM_CREATED","timestamp":"2026-04-26T14:08:05.080Z","pid":53021}
+{"event":"CREATING_MCP_SERVER","timestamp":"2026-04-26T14:08:05.080Z","pid":53021}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-26T14:08:05.081Z","message":"RequestHandlerService initialized","pid":53021}
+{"event":"MCP_SERVER_CREATED","timestamp":"2026-04-26T14:08:05.082Z","pid":53021}
+{"event":"STARTING_MCP_SERVER","timestamp":"2026-04-26T14:08:05.082Z","pid":53021}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-26T14:08:05.083Z","pid":53021}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:05.084Z","requestId":0,"method":"initialize","params":"{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{},\"clientInfo\":{\"name\":\"opencode\",\"version\":\"1.4.10\"}}","pid":53021}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:05.084Z","requestId":0,"method":"initialize","duration":0,"hasResult":true,"pid":53021}
+{"event":"NOTIFICATION_RECEIVED","timestamp":"2026-04-26T14:08:05.086Z","method":"notifications/initialized","pid":53021}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:05.086Z","requestId":1,"method":"tools/list","pid":53021}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:05.086Z","requestId":1,"method":"tools/list","duration":0,"hasResult":true,"pid":53021}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:05.088Z","requestId":2,"method":"resources/list","pid":53021}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:05.088Z","requestId":2,"method":"resources/list","duration":0,"hasResult":true,"pid":53021}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:05.089Z","requestId":3,"method":"prompts/list","pid":53021}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:05.089Z","requestId":3,"method":"prompts/list","duration":0,"hasResult":true,"pid":53021}
+
+=== MCP Server Started at 2026-04-26T14:08:46.407Z ===
+{"event":"MCP_NOVA_STARTED","timestamp":"2026-04-26T14:08:46.408Z","version":"1.0.3","args":["/opt/homebrew/Cellar/node/25.9.0_2/bin/node","/opt/homebrew/bin/mcp-nova"],"pid":53946}
+{"event":"LOADING_MODULES","timestamp":"2026-04-26T14:08:46.410Z","pid":53946}
+{"event":"MODULES_LOADED","timestamp":"2026-04-26T14:08:46.424Z","pid":53946}
+{"event":"CREATING_MEMORY_SYSTEM","timestamp":"2026-04-26T14:08:46.424Z","pid":53946}
+{"event":"MEMORY_SYSTEM_CREATED","timestamp":"2026-04-26T14:08:46.428Z","pid":53946}
+{"event":"CREATING_MCP_SERVER","timestamp":"2026-04-26T14:08:46.429Z","pid":53946}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-26T14:08:46.430Z","message":"RequestHandlerService initialized","pid":53946}
+{"event":"MCP_SERVER_CREATED","timestamp":"2026-04-26T14:08:46.431Z","pid":53946}
+{"event":"STARTING_MCP_SERVER","timestamp":"2026-04-26T14:08:46.431Z","pid":53946}
+{"event":"MCP_SERVER_STARTED","timestamp":"2026-04-26T14:08:46.432Z","pid":53946}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:46.433Z","requestId":0,"method":"initialize","params":"{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{},\"clientInfo\":{\"name\":\"opencode\",\"version\":\"1.4.10\"}}","pid":53946}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:46.433Z","requestId":0,"method":"initialize","duration":0,"hasResult":true,"pid":53946}
+{"event":"NOTIFICATION_RECEIVED","timestamp":"2026-04-26T14:08:46.436Z","method":"notifications/initialized","pid":53946}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:46.436Z","requestId":1,"method":"tools/list","pid":53946}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:46.436Z","requestId":1,"method":"tools/list","duration":0,"hasResult":true,"pid":53946}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:46.437Z","requestId":2,"method":"resources/list","pid":53946}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:46.438Z","requestId":2,"method":"resources/list","duration":1,"hasResult":true,"pid":53946}
+{"event":"REQUEST_RECEIVED","timestamp":"2026-04-26T14:08:46.438Z","requestId":3,"method":"prompts/list","pid":53946}
+{"event":"REQUEST_COMPLETED","timestamp":"2026-04-26T14:08:46.438Z","requestId":3,"method":"prompts/list","duration":0,"hasResult":true,"pid":53946}

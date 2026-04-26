@@ -11,8 +11,20 @@ import (
 	"github.com/jgervais/vibe_harness/internal/config"
 )
 
+func testConfig() config.Config {
+	return config.Config{
+		SourceDirs: []string{"**"},
+		Languages: map[string]string{
+			".go": "go",
+			".py": "python",
+			".ts": "typescript",
+		},
+		TestFilePattern: []string{"_test.", "testdata"},
+	}
+}
+
 func TestScan(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	testdataDir := filepath.Join("..", "..", "testdata")
 
 	result, err := Scan(testdataDir, &cfg, "dev", "unknown")
@@ -50,7 +62,7 @@ func TestScan(t *testing.T) {
 }
 
 func TestScan_EmptyDir(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	tmp := t.TempDir()
 
 	result, err := Scan(tmp, &cfg, "dev", "unknown")
@@ -68,7 +80,7 @@ func TestScan_EmptyDir(t *testing.T) {
 }
 
 func TestScan_SortedViolations(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	tmp := t.TempDir()
 
 	os.WriteFile(filepath.Join(tmp, "a.go"), []byte("package a\nAPI_KEY = \"sk-1234567890abcdef12345678\"\n"), 0644)
@@ -89,7 +101,7 @@ func TestScan_SortedViolations(t *testing.T) {
 }
 
 func TestDiscoverFiles(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	tmp := t.TempDir()
 
 	os.MkdirAll(filepath.Join(tmp, ".git"), 0755)
@@ -128,6 +140,95 @@ func TestDiscoverFiles(t *testing.T) {
 		if !expectedFiles[f] {
 			t.Errorf("unexpected file: %s", f)
 		}
+	}
+}
+
+func TestDiscoverFiles_SourceDirs(t *testing.T) {
+	cfg := testConfig()
+	cfg.SourceDirs = []string{"src/**"}
+
+	tmp := t.TempDir()
+
+	os.MkdirAll(filepath.Join(tmp, "src"), 0755)
+	os.WriteFile(filepath.Join(tmp, "src", "main.go"), []byte("package main"), 0644)
+
+	os.MkdirAll(filepath.Join(tmp, "src", "sub"), 0755)
+	os.WriteFile(filepath.Join(tmp, "src", "sub", "lib.go"), []byte("package sub"), 0644)
+
+	os.MkdirAll(filepath.Join(tmp, "vendor"), 0755)
+	os.WriteFile(filepath.Join(tmp, "vendor", "pkg.go"), []byte("package vendor"), 0644)
+
+	os.MkdirAll(filepath.Join(tmp, "internal"), 0755)
+	os.WriteFile(filepath.Join(tmp, "internal", "secret.go"), []byte("package internal"), 0644)
+
+	os.WriteFile(filepath.Join(tmp, "root.go"), []byte("package main"), 0644)
+
+	files, _, err := DiscoverFiles(tmp, &cfg)
+	if err != nil {
+		t.Fatalf("DiscoverFiles returned error: %v", err)
+	}
+
+	expected := []string{
+		filepath.Join(tmp, "src", "main.go"),
+		filepath.Join(tmp, "src", "sub", "lib.go"),
+	}
+	if len(files) != len(expected) {
+		t.Errorf("expected %d files, got %d: %v", len(expected), len(files), files)
+	}
+	for _, f := range expected {
+		found := false
+		for _, f2 := range files {
+			if f == f2 {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("expected file not found: %s", f)
+		}
+	}
+}
+
+func TestDiscoverFiles_SourceDirs_AncestorSkipping(t *testing.T) {
+	cfg := testConfig()
+	cfg.SourceDirs = []string{"internal/**"}
+
+	tmp := t.TempDir()
+
+	os.MkdirAll(filepath.Join(tmp, "internal", "checks"), 0755)
+	os.WriteFile(filepath.Join(tmp, "internal", "checks", "check.go"), []byte("package checks"), 0644)
+
+	os.MkdirAll(filepath.Join(tmp, "vendor", "pkg"), 0755)
+	os.WriteFile(filepath.Join(tmp, "vendor", "pkg", "lib.go"), []byte("package pkg"), 0644)
+
+	files, _, err := DiscoverFiles(tmp, &cfg)
+	if err != nil {
+		t.Fatalf("DiscoverFiles returned error: %v", err)
+	}
+
+	if len(files) != 1 {
+		t.Errorf("expected 1 file (inside internal/**), got %d: %v", len(files), files)
+	}
+	if len(files) > 0 && !strings.Contains(files[0], "internal/checks/check.go") {
+		t.Errorf("expected internal/checks/check.go, got %s", files[0])
+	}
+}
+
+func TestDiscoverFiles_SourceDirs_NoMatch(t *testing.T) {
+	cfg := testConfig()
+	cfg.SourceDirs = []string{"nonexistent/**"}
+
+	tmp := t.TempDir()
+
+	os.MkdirAll(filepath.Join(tmp, "src"), 0755)
+	os.WriteFile(filepath.Join(tmp, "src", "main.go"), []byte("package main"), 0644)
+
+	files, _, err := DiscoverFiles(tmp, &cfg)
+	if err != nil {
+		t.Fatalf("DiscoverFiles returned error: %v", err)
+	}
+	if len(files) != 0 {
+		t.Errorf("expected 0 files for non-matching source_directories, got %d", len(files))
 	}
 }
 
@@ -230,7 +331,7 @@ func TestClassifyLine_SqlLineComment(t *testing.T) {
 }
 
 func TestMultiViolation_ScannerIntegration(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	tmp := t.TempDir()
 
 	var lines []string
@@ -275,7 +376,7 @@ func TestMultiViolation_ScannerIntegration(t *testing.T) {
 }
 
 func TestDiscoverFiles_NonExistentRoot(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	_, _, err := DiscoverFiles("/non/existent/path", &cfg)
 	if err == nil {
 		t.Fatal("expected error for non-existent root, got nil")
@@ -287,7 +388,7 @@ func TestEdge_UnreadableFile(t *testing.T) {
 		t.Skip("skipping: running as root, permission denial not testable")
 	}
 
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	tmp := t.TempDir()
 
 	secretPath := filepath.Join(tmp, "secret.go")
@@ -319,7 +420,7 @@ func TestEdge_UnreadableFile(t *testing.T) {
 }
 
 func TestEdge_BinaryFileContent(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	tmp := t.TempDir()
 
 	binaryData := []byte{0x70, 0x61, 0x63, 0x6B, 0x61, 0x67, 0x65, 0x00, 0x6D, 0x61, 0x69, 0x6E}
@@ -355,7 +456,7 @@ func TestEdge_BinaryFileContent(t *testing.T) {
 }
 
 func TestEdge_EmptyDirectory(t *testing.T) {
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 	tmp := t.TempDir()
 
 	result, err := Scan(tmp, &cfg, "dev", "unknown")
@@ -393,7 +494,7 @@ func TestEdge_SymlinkCycle(t *testing.T) {
 		t.Fatalf("failed to write file: %v", err)
 	}
 
-	cfg := config.DefaultConfig()
+	cfg := testConfig()
 
 	done := make(chan struct{})
 	var files []string

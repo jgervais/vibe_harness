@@ -46,7 +46,7 @@ A stateless check that examines source file(s) and produces violations.
 |----|------|----------|-----------|
 | VH-G001 | File Length | warning | 300 lines |
 | VH-G005 | Hardcoded Secrets | error | Pattern match |
-| VH-G006 | Magic Values | warning | Inline literal detection |
+| VH-G006 | Magic Values | error | 3+ occurrences across codebase |
 | VH-G007 | Copy-Paste Duplication | warning | 6 lines, 80% similarity |
 | VH-G008 | Comment-to-Code Ratio | note | 1:3 ratio |
 | VH-G011 | Disabled Security Features | error | Pattern match |

@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/jgervais/vibe_harness/internal/ast"
 	"github.com/jgervais/vibe_harness/internal/checks/generic"
 	"github.com/jgervais/vibe_harness/internal/config"
 	"github.com/jgervais/vibe_harness/internal/rules"
@@ -125,8 +126,13 @@ func DiscoverFiles(root string, cfg *config.Config) ([]string, int, error) {
 			return nil
 		}
 
+		relPath, _ := filepath.Rel(root, path)
+
 		if d.IsDir() {
 			if skipDirs[d.Name()] {
+				return fs.SkipDir
+			}
+			if len(cfg.SourceDirs) > 0 && !cfg.IsSourceDirAncestor(relPath) {
 				return fs.SkipDir
 			}
 			return nil
@@ -134,6 +140,10 @@ func DiscoverFiles(root string, cfg *config.Config) ([]string, int, error) {
 
 		ext := filepath.Ext(d.Name())
 		if _, ok := cfg.Languages[ext]; !ok {
+			return nil
+		}
+
+		if len(cfg.SourceDirs) > 0 && !cfg.IsInSourceDir(relPath) {
 			return nil
 		}
 
@@ -180,6 +190,9 @@ func Scan(target string, cfg *config.Config, version string, rulesHash string) (
 		return nil, fmt.Errorf("discovering files: %w", err)
 	}
 
+	astParser := ast.NewParser()
+	defer astParser.Close()
+
 	fl := generic.NewFileLengthCheck()
 	hs := generic.NewHardcodedSecretsCheck()
 	mv := generic.NewMagicValuesCheck()
@@ -187,11 +200,7 @@ func Scan(target string, cfg *config.Config, version string, rulesHash string) (
 	sf := generic.NewSecurityFeaturesCheck()
 	dr := generic.NewDuplicationCheck()
 
-	singleFileChecks := []interface {
-		ID() string
-		Name() string
-		CheckFile(path string, content []byte, language string, cfg *config.Config) []rules.Violation
-	}{fl, hs, mv, cr, sf}
+	singleFileChecks := []generic.Check{fl, hs, cr, sf}
 
 	var allViolations []rules.Violation
 	var fileContents []generic.FileContent
@@ -210,12 +219,31 @@ func Scan(target string, cfg *config.Config, version string, rulesHash string) (
 		ext := filepath.Ext(path)
 		language := cfg.Languages[ext]
 
+		var parseResult *ast.ParseResult
+		if astParser.IsLanguageSupported(language) {
+			parseResult, err = astParser.ParseFile(language, content)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "warning: AST parse failed for %s: %v\n", path, err)
+				parseResult = nil
+			}
+		}
+
 		for _, chk := range singleFileChecks {
-			violations := chk.CheckFile(path, content, language, cfg)
+			var violations []rules.Violation
+			astCheck, ok := chk.(generic.ASTCheck)
+			if ok && parseResult != nil {
+				violations = astCheck.CheckFileAST(path, content, language, cfg, parseResult)
+			} else {
+				violations = chk.CheckFile(path, content, language, cfg)
+			}
 			for _, v := range violations {
 				allViolations = append(allViolations, v)
 				violationsByRule[v.RuleID]++
 			}
+		}
+
+		if parseResult != nil {
+			parseResult.Close()
 		}
 
 		fileContents = append(fileContents, generic.FileContent{
@@ -227,6 +255,12 @@ func Scan(target string, cfg *config.Config, version string, rulesHash string) (
 
 	dupViolations := dr.CheckFiles(fileContents, cfg)
 	for _, v := range dupViolations {
+		allViolations = append(allViolations, v)
+		violationsByRule[v.RuleID]++
+	}
+
+	mvViolations := mv.CheckFiles(fileContents, cfg)
+	for _, v := range mvViolations {
 		allViolations = append(allViolations, v)
 		violationsByRule[v.RuleID]++
 	}

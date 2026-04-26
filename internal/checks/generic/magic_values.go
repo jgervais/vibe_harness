@@ -1,8 +1,8 @@
 package generic
 
 import (
+	"fmt"
 	"regexp"
-	"strconv"
 	"strings"
 
 	"github.com/jgervais/vibe_harness/internal/config"
@@ -18,37 +18,28 @@ func NewMagicValuesCheck() *MagicValuesCheck {
 func (c *MagicValuesCheck) ID() string   { return "VH-G006" }
 func (c *MagicValuesCheck) Name() string { return "Magic Values" }
 
+func (c *MagicValuesCheck) CheckFile(path string, content []byte, language string, cfg *config.Config) []rules.Violation {
+	return nil
+}
+
+type numericOccurrence struct {
+	value string
+	file  string
+	line  int
+}
+
+type stringOccurrence struct {
+	value string
+	file  string
+	line  int
+}
+
 var numericLiteralRe = regexp.MustCompile(`(?:-?\d+\.\d+|-?\d+)`)
 var stringLiteralRe = regexp.MustCompile(`"([^"\\]|\\.)*"|'([^'\\]|\\.)*'`)
 var importLineRe = regexp.MustCompile(`^\s*(?:import\s|require\s*\(|from\s+['"]|require\s+['"])`)
 var allCapsIdentRe = regexp.MustCompile(`[A-Z][A-Z0-9_]*\s*(?::=|=|:)\s`)
 var pascalCaseIdentRe = regexp.MustCompile(`[A-Z][a-zA-Z0-9]+\s*(?::=|=|:)\s`)
 var constKeywordRe = regexp.MustCompile(`\bconst\b`)
-
-var allowedNumericValues = map[string]bool{
-	"0":  true,
-	"1":  true,
-	"-1": true,
-	"2":  true,
-}
-
-var allowedStringValues = map[string]bool{
-	`""`:          true,
-	`''`:          true,
-	`"true"`:      true,
-	`"false"`:     true,
-	`"null"`:      true,
-	`"nil"`:       true,
-	`"None"`:      true,
-	`"undefined"`: true,
-	`'true'`:      true,
-	`'false'`:     true,
-	`'null'`:      true,
-	`'nil'`:       true,
-	`'None'`:      true,
-	`'undefined'`: true,
-}
-
 var emptyCollectionRe = regexp.MustCompile(`^\s*(?:let|var|const)\s+\w+\s*=\s*(?:\[\]|\{\})`)
 
 func isConstantLine(line string) bool {
@@ -70,95 +61,96 @@ func isImportLine(line string) bool {
 	return importLineRe.MatchString(trimmed)
 }
 
-func formatCount(n int) string {
-	return strconv.Itoa(n)
+func isSingleDigit(s string) bool {
+	abs := strings.TrimPrefix(s, "-")
+	if len(abs) == 1 && abs[0] >= '0' && abs[0] <= '9' {
+		return true
+	}
+	return false
 }
 
-func (c *MagicValuesCheck) CheckFile(path string, content []byte, language string, cfg *config.Config) []rules.Violation {
-	lines := strings.Split(string(content), "\n")
+func (c *MagicValuesCheck) CheckFiles(files []FileContent, cfg *config.Config) []rules.Violation {
 	var violations []rules.Violation
 
 	numericCounts := map[string]int{}
-	numericFirstLine := map[string]int{}
+	numericFirst := map[string]numericOccurrence{}
+	stringCounts := map[string]int{}
+	stringFirst := map[string]stringOccurrence{}
 
-	for i, line := range lines {
-		trimmed := strings.TrimSpace(line)
-		if trimmed == "" || isImportLine(trimmed) {
+	for _, f := range files {
+		if cfg.IsTestFile(f.Path) {
 			continue
 		}
-		if isConstantLine(trimmed) {
-			continue
-		}
-		for _, match := range numericLiteralRe.FindAllString(trimmed, -1) {
-			if allowedNumericValues[match] {
+		lines := strings.Split(string(f.Content), "\n")
+		for i, line := range lines {
+			lineNum := i + 1
+			trimmed := strings.TrimSpace(line)
+			if trimmed == "" || isImportLine(trimmed) || isConstantLine(trimmed) {
 				continue
 			}
-			numericCounts[match]++
-			if _, exists := numericFirstLine[match]; !exists {
-				numericFirstLine[match] = i + 1
+			for _, match := range numericLiteralRe.FindAllString(trimmed, -1) {
+				if isSingleDigit(match) {
+					continue
+				}
+				numericCounts[match]++
+				if _, exists := numericFirst[match]; !exists {
+					numericFirst[match] = numericOccurrence{value: match, file: f.Path, line: lineNum}
+				}
+			}
+			if emptyCollectionRe.MatchString(trimmed) {
+				continue
+			}
+			for _, match := range stringLiteralRe.FindAllString(trimmed, -1) {
+				inner := match
+				if len(inner) >= 2 {
+					inner = inner[1 : len(inner)-1]
+				}
+				if len(inner) < 20 {
+					continue
+				}
+				stringCounts[match]++
+				if _, exists := stringFirst[match]; !exists {
+					stringFirst[match] = stringOccurrence{value: match, file: f.Path, line: lineNum}
+				}
 			}
 		}
 	}
 
-	reportedNumerics := map[string]bool{}
-	for i, line := range lines {
-		lineNum := i + 1
-		trimmed := strings.TrimSpace(line)
-		if trimmed == "" || isImportLine(trimmed) {
+	for val, count := range numericCounts {
+		if count < 3 {
 			continue
 		}
-		isConst := isConstantLine(trimmed)
+		first := numericFirst[val]
+		display := first.value
+		violations = append(violations, rules.Violation{
+			RuleID:   "VH-G006",
+			File:     first.file,
+			Line:     first.line,
+			Column:   0,
+			EndLine:  0,
+			Message:  fmt.Sprintf("magic value: %s used inline (appears %d times across codebase)", display, count),
+			Severity: "error",
+		})
+	}
 
-		if !isConst {
-			for _, match := range numericLiteralRe.FindAllString(trimmed, -1) {
-				if allowedNumericValues[match] {
-					continue
-				}
-				if numericCounts[match] < 2 {
-					continue
-				}
-				if reportedNumerics[match] {
-					continue
-				}
-				reportedNumerics[match] = true
-				violations = append(violations, rules.Violation{
-					RuleID:   "VH-G006",
-					File:     path,
-					Line:     numericFirstLine[match],
-					Column:   0,
-					EndLine:  0,
-					Message:  "magic value: " + match + " used inline (appears " + formatCount(numericCounts[match]) + " times)",
-					Severity: "warning",
-				})
-			}
-
-			if !emptyCollectionRe.MatchString(trimmed) {
-				for _, match := range stringLiteralRe.FindAllString(trimmed, -1) {
-					if allowedStringValues[match] {
-						continue
-					}
-					inner := match
-					if len(inner) >= 2 {
-						inner = inner[1 : len(inner)-1]
-					}
-					if len(inner) >= 20 {
-						display := match
-						if len(display) > 40 {
-							display = display[:37] + "..."
-						}
-						violations = append(violations, rules.Violation{
-							RuleID:   "VH-G006",
-							File:     path,
-							Line:     lineNum,
-							Column:   0,
-							EndLine:  0,
-							Message:  "magic string: " + display + " used inline (20+ chars)",
-							Severity: "warning",
-						})
-					}
-				}
-			}
+	for val, count := range stringCounts {
+		if count < 3 {
+			continue
 		}
+		first := stringFirst[val]
+		display := first.value
+		if len(display) > 40 {
+			display = display[:37] + "..."
+		}
+		violations = append(violations, rules.Violation{
+			RuleID:   "VH-G006",
+			File:     first.file,
+			Line:     first.line,
+			Column:   0,
+			EndLine:  0,
+			Message:  fmt.Sprintf("magic string: %s used inline (appears %d times across codebase)", display, count),
+			Severity: "error",
+		})
 	}
 
 	if violations == nil {

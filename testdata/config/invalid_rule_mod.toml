@@ -1,3 +1,8 @@
+source_directories = ["src/**"]
+
+[languages]
+".go" = "go"
+
 enabled = false
 
 [rules.VH-G001]

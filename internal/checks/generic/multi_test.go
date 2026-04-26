@@ -58,7 +58,7 @@ func TestMultiViolation_EachCheckIndividually(t *testing.T) {
 
 	t.Run("VH-G006_MagicValues", func(t *testing.T) {
 		c := NewMagicValuesCheck()
-		violations := c.CheckFile(path, content, language, &cfg)
+		violations := c.CheckFiles([]FileContent{{Path: path, Content: content}}, &cfg)
 		if len(violations) == 0 {
 			t.Error("MagicValuesCheck should flag repeated magic number 42")
 		}
@@ -66,6 +66,9 @@ func TestMultiViolation_EachCheckIndividually(t *testing.T) {
 		for _, v := range violations {
 			if v.RuleID == "VH-G006" && strings.Contains(v.Message, "42") {
 				found = true
+				if v.Severity != "error" {
+					t.Errorf("Severity = %q, want error", v.Severity)
+				}
 			}
 		}
 		if !found {
