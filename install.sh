@@ -33,7 +33,7 @@ if ! command -v curl >/dev/null 2>&1; then
   echo "curl is required"; exit 1
 fi
 
-ARCHIVE_URL="https://github.com/$REPO/releases/latest/download/${BIN}_${OS}_${ARCH}.tar.gz"
+ARCHIVE_URL="https://github.com/$REPO/releases/latest/download/vibe-harness_${OS}_${ARCH}.tar.gz"
 
 TMP_DIR="$(mktemp -d)"
 curl -fsSL "$ARCHIVE_URL" | tar xz -C "$TMP_DIR" "$BIN" 2>/dev/null || {

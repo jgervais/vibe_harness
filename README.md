@@ -72,7 +72,7 @@ make
 ## Install
 
 ```bash
-curl -sL https://github.com/jgervais/vibe_harness/releases/latest/download/install.sh | bash
+curl -sL https://raw.githubusercontent.com/jgervais/vibe_harness/main/install.sh | bash
 ```
 
 ## Exit Codes
