@@ -17,11 +17,19 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: "1.24"
-      - name: Compute rules hash
-        run: echo "RULES_HASH=$(sha256sum internal/rules/registry.go | cut -d' ' -f1)" >> $GITHUB_ENV
-      - uses: goreleaser/goreleaser-action@v5
+      - name: Build
+        run: |
+          RULES_HASH=$(sha256sum internal/rules/registry.go | cut -d' ' -f1)
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build \
+            -ldflags "-s -w -X main.version=${GITHUB_REF_NAME#v} -X main.rulesHash=${RULES_HASH}" \
+            -o vibe-harness_linux_amd64 ./cmd/vibe-harness
+      - name: Package
+        run: |
+          mkdir -p dist
+          tar czf dist/vibe-harness_linux_amd64.tar.gz \
+            vibe-harness_linux_amd64 README.md LICENSE install.sh
+          sha256sum dist/*.tar.gz > dist/checksums.txt
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
-          args: release --clean
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RULES_HASH: ${{ env.RULES_HASH }}
+          files: dist/*
